@@ -1,0 +1,8 @@
+CREATE TABLE Produtos (
+    Id INT PRIMARY KEY IDENTITY,
+    Nome VARCHAR(100) NOT NULL,
+    Preco DECIMAL(10,2) NOT NULL,
+    Quantidade INT NOT NULL,
+    Criado DATETIME2(7) NOT NULL,
+    Alterado DATETIME2(7) NOT NULL
+);
