@@ -1,5 +1,6 @@
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -11,6 +12,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
@@ -23,6 +25,13 @@ import { providePrimeNG } from 'primeng/config';
 
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+
+import localePt from '@angular/common/locales/pt';
+import { registerLocaleData } from '@angular/common';
+import { BlockUIModule } from 'primeng/blockui';
+
+
+registerLocaleData(localePt);
 
 @NgModule({
   declarations: [
@@ -42,14 +51,19 @@ import { InputIconModule } from 'primeng/inputicon';
     InputNumberModule,
     ToastModule,
     ConfirmDialogModule,
+    DialogModule,
     IconFieldModule,
-    InputIconModule
+    InputIconModule,
+    ProgressSpinnerModule,
+    BlockUIModule
   ],
   providers: [MessageService, ConfirmationService, provideAnimationsAsync(), providePrimeNG({
     theme: {
       preset: Material
     }
-  })],
+  }),
+    { provide: LOCALE_ID, useValue: 'pt-BR' }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

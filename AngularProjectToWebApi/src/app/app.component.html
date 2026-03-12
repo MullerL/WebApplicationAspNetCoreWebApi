@@ -1,103 +1,131 @@
-<main class="main">
+<p-blockui [blocked]="loading" />
+<p-progressSpinner *ngIf="loading"
+  style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2104;">
+</p-progressSpinner>
+
+<div class="main-container">
   <p-toast />
   <p-confirmDialog />
 
-  <div class="content">
-    <div class="left-side">
-      <h2>Produtos</h2>
-      <div *ngIf="loading">Carregando...</div>
-      <div *ngIf="error" style="color:red">{{ error }}</div>
+  <div class="glass-card">
+    <div
+      class="header-section flex flex-column md:flex-row align-items-center justify-content-between mb-4 gap-3 text-center md:text-left">
+      <div class="title-group">
+        <h1 class="gradient-text">Inventory Pro</h1>
+        <p class="text-sm opacity-70">Gerencie seus produtos com estilo.</p>
+      </div>
+      <p-button label="Novo Produto" icon="pi pi-plus" (onClick)="novoProduto()"
+        class="p-button-rounded p-button-raised w-full md:w-auto" />
+    </div>
 
-      <!-- Formulário -->
-      <form (ngSubmit)="salvarProduto()" #formProduto="ngForm" style="margin-bottom:1rem;">
-        <div class="flex gap-2 mt-2">
-          <!-- Nome -->
-          <input pInputText
-                 type="text"
-                 name="nome"
-                 [(ngModel)]="produtoForm.nome"
-                 placeholder="Nome"
-                 maxlength="100"
-                 required />
+    <div *ngIf="error" class="p-message p-message-error mb-3">{{ error }}</div>
 
-          <!-- Preço -->
-          <p-inputNumber name="preco"
-                         [(ngModel)]="produtoForm.preco"
-                         placeholder="Preço"
-                         mode="currency"
-                         currency="BRL"
-                         locale="pt-BR"
-                         required></p-inputNumber>
-
-          <!-- Quantidade -->
-          <p-inputNumber name="quantidade"
-                         [(ngModel)]="produtoForm.quantidade"
-                         placeholder="Quantidade"
-                         [showButtons]="true"
-                         required></p-inputNumber>
-
-          <!-- Botões -->
-
-          <p-button type="submit"
-                    [disabled]="formProduto.invalid"
-                    [label]="editando ? 'Salvar' : 'Cadastrar'" />
-          <p-button *ngIf="editando" styleClass="color: blue"
-                    type="button"
-                    label="Cancelar"
-                    severity="danger"
-                    (onClick)="cancelarEdicao()" />
+    <p-dialog [(visible)]="displayDialog" [modal]="true" [blockScroll]="false"
+      styleClass="p-fluid glass-dialog w-full md:w-30rem max-w-full" [draggable]="false" [resizable]="false">
+      <ng-template pTemplate="header">
+        <div class="flex align-items-center gap-3">
+          <div class="header-icon-container">
+            <i class="pi pi-box"></i>
+          </div>
+          <div>
+            <span class="text-xl font-bold block">{{ editando ? 'Editar Produto' : 'Novo Produto' }}</span>
+            <span class="text-xs opacity-60">Preencha os dados técnicos abaixo.</span>
+          </div>
         </div>
-      </form>
-      <p-table #dt2 [value]="produtos" dataKey="id" stripedRows [paginator]="true"
-               [rows]="5" *ngIf="!loading && produtos.length"
-               [globalFilterFields]="['id', 'nome', 'preco', 'quantidade']">
+      </ng-template>
 
-        <ng-template #caption>
-          <div class="flex">
-            <p-iconfield iconPosition="left" class="ml-auto">
-              <p-inputicon>
-                <i class="pi pi-search"></i>
-              </p-inputicon>
-              <input pInputText type="text" (input)="dt2.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword" />
+      <ng-template pTemplate="content">
+        <form (ngSubmit)="salvarProduto()" #formProduto="ngForm" class="mt-4">
+          <div class="form-group mb-4">
+            <label for="nome" class="form-label">Nome do Produto</label>
+            <div class="p-inputgroup">
+              <span class="p-inputgroup-addon"><i class="pi pi-tag"></i></span>
+              <input pInputText id="nome" type="text" name="nome" [(ngModel)]="produtoForm.nome"
+                placeholder="Ex: Teclado Mecânico RGB" required autofocus />
+            </div>
+          </div>
+
+          <div class="form-group mb-4">
+            <label for="preco" class="form-label">Preço Unitário</label>
+            <p-inputNumber id="preco" name="preco" [(ngModel)]="produtoForm.preco" mode="currency" currency="BRL"
+              locale="pt-BR" placeholder="R$ 0,00" [min]="0" required></p-inputNumber>
+          </div>
+
+          <div class="form-group mb-4">
+            <label for="quantidade" class="form-label">Estoque Inicial</label>
+            <p-inputNumber id="quantidade" name="quantidade" [(ngModel)]="produtoForm.quantidade" [showButtons]="true"
+              buttonLayout="horizontal" spinnerMode="horizontal" decrementButtonClass="p-button-secondary"
+              incrementButtonClass="p-button-secondary" incrementButtonIcon="pi pi-plus"
+              decrementButtonIcon="pi pi-minus" placeholder="0" useGrouping="true" locale="pt-BR" [min]="0"
+              required></p-inputNumber>
+          </div>
+
+          <div class="flex justify-content-end gap-3 mt-4 pt-3 border-top-1 border-alpha-10">
+            <p-button label="Cancelar" icon="pi pi-times" severity="secondary" (onClick)="hideDialog()" text
+              class="p-button-sm" />
+            <p-button [label]="editando ? 'Atualizar' : 'Cadastrar'" [icon]="editando ? 'pi pi-save' : 'pi pi-check'"
+              type="submit" [disabled]="formProduto.invalid" class="p-button-sm shadow-2" />
+          </div>
+        </form>
+      </ng-template>
+    </p-dialog>
+
+    <div class="custom-table shadow-4">
+      <p-table #dt2 [value]="produtos" dataKey="id" [paginator]="true" [rows]="5" *ngIf="produtos.length"
+        responsiveLayout="stack" [globalFilterFields]="['id', 'nome', 'preco', 'quantidade', 'criado', 'alterado']"
+        styleClass="p-datatable-sm">
+
+        <ng-template pTemplate="caption">
+          <div class="flex align-items-center justify-content-between">
+            <span class="text-xl font-bold">Lista de Produtos</span>
+            <p-iconfield iconPosition="left">
+              <p-inputicon class="pi pi-search"></p-inputicon>
+              <input pInputText type="text" (input)="dt2.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Buscar produto..." class="p-inputtext-sm" />
             </p-iconfield>
           </div>
         </ng-template>
 
         <ng-template pTemplate="header">
           <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Preço</th>
-            <th>Quantidade</th>
-            <th>Ações</th>
+            <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+            <th pSortableColumn="nome">Nome <p-sortIcon field="nome"></p-sortIcon></th>
+            <th pSortableColumn="preco">Preço <p-sortIcon field="preco"></p-sortIcon></th>
+            <th>Estoque</th>
+            <th pSortableColumn="criado">Criado <p-sortIcon field="criado"></p-sortIcon></th>
+            <th pSortableColumn="alterado">Alterado <p-sortIcon field="alterado"></p-sortIcon></th>
+            <th class="text-center">Ações</th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-p>
-          <tr>
-            <td>{{ p.id }}</td>
+          <tr class="fadein transition-duration-300">
+            <td><span class="font-medium">#{{ p.id }}</span></td>
             <td>{{ p.nome }}</td>
-            <td>{{ p.preco | currency:'BRL' }}</td>
-            <td>{{ p.quantidade }}</td>
+            <td><span class="text-primary font-bold">{{ p.preco | currency:'BRL' }}</span></td>
             <td>
-              <p-button icon="pi pi-pencil"
-                        size="small"
-                        variant="text"
-                        (onClick)="editarProduto(p)" />
-              <p-button icon="pi pi-trash"
-                        size="small"
-                        variant="text"
-                        severity="danger"
-                        (onClick)="removerProduto(p.id)" />
+              <span
+                [class]="'status-badge status-' + (p.quantidade > 10 ? 'instock' : p.quantidade > 0 ? 'lowstock' : 'outofstock')">
+                {{ p.quantidade | number:'1.0-0':'pt-BR' }} unidades
+              </span>
+            </td>
+            <td><span class="text-xs opacity-60">{{ p.criado | date:'dd/MM/yyyy HH:mm:ss' }}</span></td>
+            <td><span class="text-xs opacity-60">{{ p.alterado | date:'dd/MM/yyyy HH:mm:ss' }}</span></td>
+            <td class="text-center">
+              <p-button icon="pi pi-pencil" rounded text (onClick)="editarProduto(p)" class="action-btn" />
+              <p-button icon="pi pi-trash" rounded text severity="danger" (onClick)="removerProduto(p.id)"
+                class="action-btn" />
             </td>
           </tr>
         </ng-template>
       </p-table>
 
-      <div *ngIf="!loading && !produtos.length && !error">
-        Nenhum produto encontrado.
+      <div *ngIf="!loading && !produtos.length && !error" class="text-center p-5 glass-card mt-3">
+        <i class="pi pi-box text-5xl opacity-20 mb-3 block"></i>
+        <span class="opacity-50">Nenhum produto cadastrado no momento.</span>
       </div>
     </div>
   </div>
-</main>
+</div>
+
 <router-outlet />

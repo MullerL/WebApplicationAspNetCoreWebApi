@@ -1,0 +1,149 @@
+.main-container {
+    min-height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 1200px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    animation: fadeIn 0.8s ease-out;
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.gradient-text {
+    background: linear-gradient(45deg, #6e8efb, #a777e3, #33ffac);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    font-size: 2.5rem;
+    margin: 0;
+    animation: shine 4s linear infinite;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}
+
+.custom-table {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 1rem;
+    min-height: 500px;
+    /* Garante tamanho vertical suficiente para o modal exibir todos os campos */
+}
+
+.action-btn {
+    transition: transform 0.2s;
+}
+
+.action-btn:hover {
+    transform: scale(1.1);
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-instock {
+    background: rgba(51, 255, 172, 0.2);
+    color: #33ffac;
+}
+
+.status-lowstock {
+    background: rgba(255, 172, 51, 0.2);
+    color: #ffac33;
+}
+
+.status-outofstock {
+    background: rgba(255, 51, 102, 0.2);
+    color: #ff3366;
+}
+
+/* Refined Modal Styles */
+.header-icon-container {
+    background: var(--primary-gradient);
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(110, 142, 251, 0.4);
+}
+
+.header-icon-container i {
+    color: white;
+    font-size: 1.2rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+    letter-spacing: 0.02rem;
+}
+
+
+
+/* Responsividade Mobile */
+@media screen and (max-width: 768px) {
+    .main-container {
+        padding: 1rem;
+    }
+
+    .glass-card {
+        padding: 1.5rem;
+        border-radius: 16px;
+    }
+
+    .gradient-text {
+        font-size: 2rem;
+    }
+
+    .p-dialog .p-dialog-content {
+        padding: 0 1rem 1rem 1rem;
+    }
+
+    /* Ajuste para tabela no mobile (PrimeNG stack layout) */
+    ::ng-deep .p-datatable.p-datatable-sm .p-datatable-tbody>tr>td {
+        padding: 0.5rem 1rem;
+    }
+}

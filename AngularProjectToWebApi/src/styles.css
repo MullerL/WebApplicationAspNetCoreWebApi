@@ -1,5 +1,82 @@
-/* You can add global styles to this file, and also import other style files */
-/*@import '~primeicons/primeicons.css';
-@import '~primeng/resources/themes/lara-light-blue/theme.css';
-@import '~primeng/resources/primeng.min.css';
-*/
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary-gradient: linear-gradient(135deg, #6e8efb, #a777e3);
+  --vibrant-gradient: linear-gradient(45deg, #ff3366, #ffac33, #33ffac, #3366ff);
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --text-color: #f8f9fa;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-color);
+  background: #0f172a;
+  /* Slate 900 */
+}
+
+/* Override PrimeNG body scroll lock forcibly */
+body.p-overflow-hidden {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 30%, rgba(110, 142, 251, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(167, 119, 227, 0.15) 0%, transparent 50%);
+  z-index: -1;
+}
+
+/* Custom PrimeNG Theme Adjustments */
+.p-datatable {
+  background: transparent !important;
+}
+
+.p-datatable .p-datatable-header,
+.p-datatable .p-datatable-thead>tr>th,
+.p-datatable .p-datatable-tbody>tr {
+  background: transparent !important;
+  color: var(--text-color) !important;
+}
+
+.p-datatable .p-datatable-thead>tr>th {
+  border-bottom: 2px solid var(--glass-border) !important;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05rem;
+}
+
+.p-datatable .p-datatable-tbody>tr {
+  backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.03) !important;
+  transition: all 0.3s ease;
+}
+
+.p-datatable .p-datatable-tbody>tr:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  transform: scale(1.002);
+}
+
+.p-dialog {
+  background: rgba(15, 23, 42, 0.9) !important;
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 16px !important;
+}
+
+.p-dialog .p-dialog-header,
+.p-dialog .p-dialog-content,
+.p-dialog .p-dialog-footer {
+  background: transparent !important;
+  color: var(--text-color) !important;
+}

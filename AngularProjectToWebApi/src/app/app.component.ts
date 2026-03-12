@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
   // Para formulário de cadastro/edição
   produtoForm: Produto = { nome: '' };
   editando: boolean = false;
+  displayDialog: boolean = false;
 
   constructor(private produtoService: ProdutoService, private confirmationService: ConfirmationService,
     private messageService: MessageService) { }
@@ -42,23 +43,28 @@ export class AppComponent implements OnInit {
   }
 
   salvarProduto() {
+    this.loading = true;
     if (this.editando && this.produtoForm.id) {
       this.produtoService.update(this.produtoForm.id, this.produtoForm).subscribe({
         next: () => {
+          this.loading = false;
           this.fetchProdutos();
           this.cancelarEdicao();
-          this.messageService.add({severity:'success', summary:'Atualizado', detail:'Produto atualizado com sucesso'});
+          this.hideDialog();
+          this.messageService.add({ severity: 'success', summary: 'Atualizado', detail: 'Produto atualizado com sucesso' });
         },
-        error: () => this.error = 'Erro ao atualizar produto'
+        error: () => { this.error = 'Erro ao atualizar produto'; this.loading = false; }
       });
     } else {
       this.produtoService.create(this.produtoForm).subscribe({
         next: () => {
+          this.loading = false;
           this.fetchProdutos();
           this.limparFormulario();
-          this.messageService.add({severity:'success', summary:'Cadastrado', detail:'Produto cadastrado com sucesso'});
+          this.hideDialog();
+          this.messageService.add({ severity: 'success', summary: 'Cadastrado', detail: 'Produto cadastrado com sucesso' });
         },
-        error: () => this.error = 'Erro ao cadastrar produto'
+        error: () => { this.error = 'Erro ao cadastrar produto'; this.loading = false; }
       });
     }
   }
@@ -66,15 +72,32 @@ export class AppComponent implements OnInit {
   editarProduto(p: Produto) {
     this.produtoForm = { ...p };
     this.editando = true;
+    this.showDialog();
+  }
+
+  showDialog() {
+    this.displayDialog = true;
+  }
+
+  novoProduto() {
+    this.limparFormulario();
+    this.editando = false;
+    this.showDialog();
+  }
+
+  hideDialog() {
+    this.displayDialog = false;
   }
 
   cancelarEdicao() {
     this.limparFormulario();
     this.editando = false;
+    this.hideDialog();
   }
 
   limparFormulario() {
     this.produtoForm = { nome: '', preco: 0, quantidade: 0 };
+    this.error = '';
   }
 
   removerProduto(id: number | undefined) {
@@ -96,7 +119,7 @@ export class AppComponent implements OnInit {
         this.produtoService.delete(id).subscribe({
           next: () => {
             this.fetchProdutos();
-            this.messageService.add({severity:'success', summary:'Removido', detail:'Produto removido com sucesso'});
+            this.messageService.add({ severity: 'success', summary: 'Removido', detail: 'Produto removido com sucesso' });
           },
           error: () => this.error = 'Erro ao remover produto'
         });

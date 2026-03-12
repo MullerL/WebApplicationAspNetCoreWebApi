@@ -5,9 +5,9 @@ import { Produto } from '../models/produto';
 
 @Injectable({ providedIn: 'root' })
 export class ProdutoService {
-  private api = 'https://localhost:7144/api/Produto'; // ajuste a porta se necessário
+  private api = 'http://localhost:5001/api/Produto'; // ajuste a porta se necessário
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAll(): Observable<Produto[]> {
     return this.http.get<Produto[]>(this.api);
